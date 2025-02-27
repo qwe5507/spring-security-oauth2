@@ -1,5 +1,10 @@
 package nextstep.oauth2.endpoint;
 
+import org.springframework.util.CollectionUtils;
+
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
 
 public class OAuth2AuthorizationRequest {
@@ -9,6 +14,7 @@ public class OAuth2AuthorizationRequest {
     private final Set<String> scopes;
     private final String state;
     private final String authorizationRequestUri;
+    private final Map<String, Object> attributes;
 
     private OAuth2AuthorizationRequest(Builder builder) {
         this.authorizationUri = builder.authorizationUri;
@@ -17,6 +23,7 @@ public class OAuth2AuthorizationRequest {
         this.scopes = builder.scopes;
         this.state = builder.state;
         this.authorizationRequestUri = builder.authorizationRequestUri;
+        this.attributes = Collections.unmodifiableMap(builder.attributes);
     }
 
     public static Builder builder() {
@@ -47,6 +54,10 @@ public class OAuth2AuthorizationRequest {
         return authorizationRequestUri;
     }
 
+    public String getAttribute(String key) {
+        return (String) attributes.get(key);
+    }
+
     public static class Builder {
         private String authorizationUri;
         private String clientId;
@@ -54,6 +65,7 @@ public class OAuth2AuthorizationRequest {
         private Set<String> scopes;
         private String state;
         private String authorizationRequestUri;
+        private Map<String, Object> attributes = new LinkedHashMap<>();
 
         public Builder authorizationUri(String authorizationUri) {
             this.authorizationUri = authorizationUri;
@@ -82,6 +94,13 @@ public class OAuth2AuthorizationRequest {
 
         public Builder authorizationRequestUri(String authorizationRequestUri) {
             this.authorizationRequestUri = authorizationRequestUri;
+            return this;
+        }
+
+        public Builder attributes(Map<String, Object> attributes) {
+            if (!CollectionUtils.isEmpty(attributes)) {
+                this.attributes.putAll(attributes);
+            }
             return this;
         }
 

@@ -1,6 +1,7 @@
 package nextstep.oauth2.web;
 
 import jakarta.servlet.http.HttpServletRequest;
+import nextstep.oauth2.OAuth2ParameterNames;
 import nextstep.oauth2.endpoint.OAuth2AuthorizationRequest;
 import nextstep.oauth2.exception.OAuth2RegistrationNotFoundException;
 import nextstep.oauth2.keygen.StateGenerator;
@@ -9,6 +10,8 @@ import nextstep.oauth2.registration.ClientRegistrationRepository;
 import nextstep.security.access.MvcRequestMatcher;
 import nextstep.security.access.RequestMatcher;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import java.util.Map;
 
 public class OAuth2AuthorizationRequestResolver {
     private static final StateGenerator DEFAULT_STATE_GENERATOR = new StateGenerator();
@@ -64,6 +67,7 @@ public class OAuth2AuthorizationRequestResolver {
                 .scopes(clientRegistration.getScopes())
                 .state(state)
                 .authorizationRequestUri(buildAuthorizationRequestUri(clientRegistration, state))
+                .attributes(Map.of(OAuth2ParameterNames.REGISTRATION_ID, clientRegistration.getRegistrationId()))
                 .build();
     }
 

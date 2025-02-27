@@ -6,17 +6,15 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import nextstep.oauth2.OAuth2AuthorizationResponseUtils;
 import nextstep.oauth2.OAuth2AuthorizedClient;
+import nextstep.oauth2.OAuth2ParameterNames;
 import nextstep.oauth2.authentication.OAuth2AuthenticationToken;
 import nextstep.oauth2.authentication.OAuth2LoginAuthenticationToken;
-import nextstep.oauth2.web.AuthorizationRequestRepository;
-import nextstep.oauth2.web.HttpSessionOAuth2AuthorizationRequestRepository;
 import nextstep.oauth2.endpoint.OAuth2AuthorizationExchange;
 import nextstep.oauth2.endpoint.OAuth2AuthorizationRequest;
 import nextstep.oauth2.endpoint.OAuth2AuthorizationResponse;
 import nextstep.oauth2.exception.OAuth2AuthenticationException;
 import nextstep.oauth2.registration.ClientRegistration;
 import nextstep.oauth2.registration.ClientRegistrationRepository;
-import nextstep.oauth2.web.OAuth2AuthorizedClientRepository;
 import nextstep.security.access.MvcRequestMatcher;
 import nextstep.security.access.RequestMatcher;
 import nextstep.security.authentication.AbstractAuthenticationProcessingFilter;
@@ -57,7 +55,7 @@ public class OAuth2LoginAuthenticationFilter extends AbstractAuthenticationProce
 
         OAuth2AuthorizationRequest authorizationRequest = getAuthorizationRequest(request, response);
 
-        String registrationId = extractRegistrationId(request.getRequestURI());
+        String registrationId = authorizationRequest.getAttribute(OAuth2ParameterNames.REGISTRATION_ID);
         ClientRegistration clientRegistration = getClientRegistration(registrationId);
 
         OAuth2AuthorizationResponse authorizationResponse = getOAuth2AuthorizationResponse(request, clientRegistration);
